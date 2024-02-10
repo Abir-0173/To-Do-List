@@ -1,0 +1,21 @@
+body{
+    background-color: rgb(218 241 255);
+}
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.card {
+    background-color: aliceblue;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); /* 3D drop shadow */
+    /* background-color: #fff; */
+    width: 300px; /* Adjust width as needed */
+}
+a{
+    text-decoration: none;
+}
