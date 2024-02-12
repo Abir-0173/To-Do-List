@@ -45,13 +45,14 @@ function removeTask(e) {
     if (e.target.hasAttribute('href')) {
         if (confirm("Are You Sure?")) {
             let ele = e.target.parentElement;
+            let taskName = ele.firstChild.nextSibling.textContent.trim();
             ele.remove();
-            // console.log(ele);
-            removeFromLS(ele);
+            removeFromLS(taskName);
         }
     }
-
 }
+
+
 
 //clear Task ----
 function ClearTask(e) {
@@ -135,21 +136,17 @@ function getTasks() {
 
 
 
-function removeFromLS(taskItem) {
+function removeFromLS(taskName) {
     let tasks;
     if (localStorage.getItem('tasks') === null) {
         tasks = [];
     } else {
         tasks = JSON.parse(localStorage.getItem('tasks'));
     }
-    let li = taskItem;
-    li.removeChild(li.lastChild); //<a>❌</a>
 
-    tasks.forEach((task, index) => {
-        if (li.textContent.trim() === task) {
-            tasks.splice(index, 1);
-        }
-    });
+    // Remove the task object from the array based on the task name
+    tasks = tasks.filter(task => task.name !== taskName);
 
+    // Update the local storage with the updated tasks array
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
