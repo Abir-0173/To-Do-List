@@ -8,34 +8,36 @@ let clearBtn = document.querySelector('#clear_task_btn');
 //Define EventListener
 form.addEventListener('submit', addTask);
 taskList.addEventListener('click', removeTask);
-clearBtn.addEventListener("click", ClearTask)
+clearBtn.addEventListener("click", ClearTask);
 filter.addEventListener('keyup', filterTask);
-document.addEventListener('DOMContentLoaded', getTasks)
+document.addEventListener('DOMContentLoaded', getTasks);
 
 //Define Function
 function addTask(e) {
-    // console.log(e);
     if (taskInput.value === '') {
-        alert('You are adding empty task❗\n Please write your Task Name.');
-
+        alert('You are adding an empty task❗\nPlease write your Task Name.');
     } else {
-        // Create li element
         let li = document.createElement('li');
-        li.appendChild(document.createTextNode(taskInput.value + " "));
+        let createCheckBox = document.createElement("INPUT");
+        createCheckBox.setAttribute("type", "checkbox");
+        li.appendChild(createCheckBox);
 
+        // Store the task name and checkbox status in local storage
+        StoreTaskInLocalStorage(taskInput.value, createCheckBox.checked);
+
+        li.appendChild(document.createTextNode(taskInput.value + " "));
+        
         let link = document.createElement('a');
         link.setAttribute('href', '#');
         link.innerHTML = '❌';
         li.appendChild(link);
 
         taskList.appendChild(li);
-
-        StoreTaskInLocalStorage(taskInput.value);
-
         taskInput.value = '';
     }
     e.preventDefault();
 }
+
 
 
 // REMOVE TASK FUNCTION 
@@ -87,18 +89,23 @@ function filterTask(e) {
 
 
 // Store in Local Storage
-function StoreTaskInLocalStorage(task) {
+function StoreTaskInLocalStorage(task, checked) {
     let tasks;
     if (localStorage.getItem('tasks') === null) {
         tasks = [];
     } else {
         tasks = JSON.parse(localStorage.getItem('tasks'))
     }
-    tasks.push(task);
+    let taskObject = {
+        name: task,
+        isChecked: checked
+    };
+    tasks.push(taskObject);
 
     localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
+//---------------
 function getTasks() {
     let tasks;
     if (localStorage.getItem('tasks') === null) {
@@ -107,19 +114,25 @@ function getTasks() {
         tasks = JSON.parse(localStorage.getItem('tasks'))
     }
 
-    tasks.forEach(task => {
-        let li = document.createElement('li');
-        li.appendChild(document.createTextNode(task + " "));
+    taskList.innerHTML = '';
 
+    tasks.forEach(taskObject => {
+        let li = document.createElement('li');
+        let createCheckBox = document.createElement("INPUT");
+        createCheckBox.setAttribute("type", "checkbox");
+        createCheckBox.checked = taskObject.isChecked || false;
+        li.appendChild(createCheckBox);
+
+        li.appendChild(document.createTextNode(taskObject.name + " "));
         let link = document.createElement('a');
         link.setAttribute('href', '#');
         link.innerHTML = '❌';
         li.appendChild(link);
 
         taskList.appendChild(li);
-    })
-
+    });
 }
+
 
 
 function removeFromLS(taskItem) {
