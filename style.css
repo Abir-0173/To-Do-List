@@ -19,3 +19,6 @@ body{
 a{
     text-decoration: none;
 }
+#tasks li{
+    list-style: none;
+}
